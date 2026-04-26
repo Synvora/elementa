@@ -88,6 +88,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
 }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
@@ -138,6 +139,7 @@ body::after {
 }
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .serif { font-family: var(--font-display); }
+.ltr { direction: ltr; unicode-bidi: isolate; }
 
 :focus-visible {
   outline: 2px solid var(--accent);

@@ -1,7 +1,6 @@
 // Renders the periodic table grid and owns search + category filter state.
 import { getElements, CATEGORIES } from "./data.js";
 import { openDetail } from "./detail.js";
-import { localizedName, t } from "./localize.js";
 
 let activeCategories = new Set();  // empty = all
 let searchTerm = "";
@@ -38,7 +37,7 @@ export function renderTable() {
     tile.style.setProperty("--i", i);
 
     const mass = el.atomicMass != null ? el.atomicMass.toFixed(2) : "—";
-    const displayName = localizedName(el);
+    const displayName = el.name;
     tile.innerHTML = `
       <div class="z ltr"><span>${el.atomicNumber}</span><span>${mass}</span></div>
       <div class="sym ltr">${el.symbol}</div>
@@ -88,7 +87,7 @@ function renderFilterChips() {
     b.type = "button";
     b.setAttribute("aria-pressed", "false");
     b.dataset.cat = cat.id;
-    const label = t(cat.i18n || "") || cat.label;
+    const label = cat.label;
     b.innerHTML = `<span class="swatch" style="background: var(--cat-${cat.id})"></span>${label}`;
     b.addEventListener("click", () => toggleCategory(cat.id, b));
     chips.appendChild(b);

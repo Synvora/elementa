@@ -5,15 +5,13 @@ import { renderTable } from "./table.js";
 import { initSearch } from "./search.js";
 import { initBondingLab } from "./bonding.js";
 import { initQuiz } from "./quiz.js";
-import { initLocale, setLocale, getLocale, applyI18n, onLocaleChange } from "./localize.js";
 import { initFlashcards } from "./flashcards.js";
 import { initTrends } from "./trends.js";
 
-const VIEWS = ["table", "lab", "quiz", "cards", "trends"];
+const VIEWS = ["table", "lab", "quiz", "cards", "trends", "privacy", "terms", "disclaimer", "contact"];
 
 async function boot() {
   initTheme();
-  await initLocale();
   try {
     await loadData();
   } catch (e) {
@@ -28,25 +26,7 @@ async function boot() {
   initFlashcards();
   initTrends();
   wireNav();
-  wireLocale();
-  applyI18n(document);
-  onLocaleChange(() => {
-    // re-render views that hold user-facing strings in JS
-    renderTable();
-    applyI18n(document);
-  });
   registerSW();
-}
-
-function wireLocale() {
-  const btn = document.getElementById("locale-toggle");
-  if (!btn) return;
-  btn.addEventListener("click", () => {
-    const next = getLocale() === "ur" ? "en" : "ur";
-    setLocale(next);
-    btn.textContent = next === "ur" ? "EN" : "اردو";
-  });
-  btn.textContent = getLocale() === "ur" ? "EN" : "اردو";
 }
 
 function wireNav() {
@@ -58,13 +38,24 @@ function wireNav() {
     // the filter chips only make sense on the table view
     const chips = document.getElementById("filter-chips");
     if (chips) chips.style.display = name === "table" ? "" : "none";
+    // scroll to top so deep-linking to Privacy/Terms doesn't land mid-page
+    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
   };
-  show("table");
-  document.getElementById("nav-table").addEventListener("click",  () => show("table"));
-  document.getElementById("nav-lab").addEventListener("click",    () => show("lab"));
-  document.getElementById("nav-quiz").addEventListener("click",   () => show("quiz"));
-  document.getElementById("nav-cards")?.addEventListener("click", () => show("cards"));
-  document.getElementById("nav-trends")?.addEventListener("click",() => show("trends"));
+
+  // Hash router — supports #/privacy, #/terms, etc. Falls back to "table".
+  const fromHash = () => {
+    const m = location.hash.match(/^#\/([a-z]+)/);
+    return m && VIEWS.includes(m[1]) ? m[1] : "table";
+  };
+  show(fromHash());
+  window.addEventListener("hashchange", () => show(fromHash()));
+
+  // Topbar nav buttons
+  document.getElementById("nav-table").addEventListener("click",  () => { location.hash = ""; show("table"); });
+  document.getElementById("nav-lab").addEventListener("click",    () => { location.hash = ""; show("lab"); });
+  document.getElementById("nav-quiz").addEventListener("click",   () => { location.hash = ""; show("quiz"); });
+  document.getElementById("nav-cards")?.addEventListener("click", () => { location.hash = ""; show("cards"); });
+  document.getElementById("nav-trends")?.addEventListener("click",() => { location.hash = ""; show("trends"); });
 }
 
 function registerSW() {

@@ -6,17 +6,23 @@ canvas { touch-action: none; }
 /* Periodic table scroll behavior — gentle on desktop, hard-scroll on small phones */
 .ptable-scroll {
   width: 100%;
-  direction: ltr;               /* grid stays LTR even in RTL mode */
 }
 
-@media (max-width: 504px) {
+@media (max-width: 760px) {
   .ptable-scroll {
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 8px;
     scrollbar-width: thin;
+    /* Edge gradients hint that the table can be scrolled horizontally. */
+    background:
+      linear-gradient(to right,
+        color-mix(in srgb, var(--paper) 92%, transparent),
+        transparent 24px) left center / 24px 100% no-repeat local,
+      linear-gradient(to left,
+        color-mix(in srgb, var(--paper) 92%, transparent),
+        transparent 24px) right center / 24px 100% no-repeat local;
   }
   .ptable-scroll::-webkit-scrollbar { height: 6px; }
   .ptable-scroll::-webkit-scrollbar-thumb {
@@ -24,10 +30,16 @@ canvas { touch-action: none; }
     border-radius: 4px;
   }
   .ptable {
-    --tile-size: 44px;
     width: max-content;
-    gap: 3px;
     padding: 8px 4px 16px;
+  }
+}
+
+@media (max-width: 504px) {
+  .ptable-scroll { scroll-snap-type: x proximity; }
+  .ptable {
+    --tile-size: 44px;
+    gap: 3px;
   }
   .ptable .tile { scroll-snap-align: start; min-height: 44px; }
   .ptable .tile .sym { font-size: 14px; }

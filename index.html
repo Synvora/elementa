@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Elementa · Periodic Table Lab</title>
-  <meta name="description" content="A beautiful interactive periodic table with element details, 3D atomic structure, bonding simulator, and quizzes." />
+  <meta name="description" content="A beautiful interactive periodic table with element details, 3D atomic structure, bonding simulator, flashcards, trends, and quizzes." />
   <meta name="theme-color" content="#0a0e1a" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
@@ -22,7 +22,6 @@
   <link rel="stylesheet" href="css/quiz.css" />
   <link rel="stylesheet" href="css/flashcards.css" />
   <link rel="stylesheet" href="css/trends.css" />
-  <link rel="stylesheet" href="css/localize.css" />
   <link rel="stylesheet" href="css/mobile.css" />
 
   <script type="importmap">
@@ -48,24 +47,23 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
           </svg>
-          <input id="search-input" type="search" aria-label="Search by name, symbol, or atomic number" data-i18n-placeholder="search.placeholder" placeholder="Search element by name, symbol, or atomic number…" autocomplete="off" />
+          <input id="search-input" type="search" aria-label="Search by name, symbol, or atomic number" placeholder="Search element by name, symbol, or atomic number…" autocomplete="off" />
           <span class="kbd ltr">/</span>
         </label>
       </div>
 
-      <div class="topbar-right">
-        <button class="btn" id="nav-table" aria-label="Periodic table view"><span data-i18n="nav.table">Table</span></button>
-        <button class="btn" id="nav-lab" aria-label="Bonding lab"><span data-i18n="nav.lab">Lab</span></button>
-        <button class="btn" id="nav-quiz" aria-label="Quiz"><span data-i18n="nav.quiz">Quiz</span></button>
-        <button class="btn" id="nav-cards" aria-label="Flashcards"><span data-i18n="nav.cards">Cards</span></button>
-        <button class="btn" id="nav-trends" aria-label="Trends"><span data-i18n="nav.trends">Trends</span></button>
-        <button class="btn locale" id="locale-toggle" aria-label="Change language" title="Change language">اردو</button>
-        <button class="btn icon" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-          </svg>
-        </button>
-      </div>
+      <nav class="nav-strip topbar-nav" aria-label="Primary">
+        <button class="btn" id="nav-table" aria-label="Periodic table view"><span>Table</span></button>
+        <button class="btn" id="nav-lab" aria-label="Bonding lab"><span>Lab</span></button>
+        <button class="btn" id="nav-quiz" aria-label="Quiz"><span>Quiz</span></button>
+        <button class="btn" id="nav-cards" aria-label="Flashcards"><span>Cards</span></button>
+        <button class="btn" id="nav-trends" aria-label="Trends"><span>Trends</span></button>
+      </nav>
+      <button class="btn icon" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+      </button>
     </header>
 
     <nav class="chips" id="filter-chips" aria-label="Filter by category"></nav>
@@ -75,13 +73,13 @@
       <section id="view-table" class="view active" aria-label="Periodic table">
         <div class="page-head">
           <div>
-            <div class="eyebrow" data-i18n="eyebrow.table">Observatory · 118 Elements · Interactive</div>
-            <h1 data-i18n="title.table">The Periodic Table.</h1>
+            <div class="eyebrow">Observatory · 118 Elements · Interactive</div>
+            <h1>The Periodic Table.</h1>
           </div>
           <div class="stats">
-            <div><b id="stat-visible" class="ltr">118</b><span data-i18n="stats.visible">visible</span></div>
-            <div><b id="stat-total" class="ltr">118</b><span data-i18n="stats.total">total</span></div>
-            <div><b id="stat-compounds" class="ltr">40</b><span data-i18n="stats.compounds">compounds</span></div>
+            <div><b id="stat-visible" class="ltr">118</b><span>visible</span></div>
+            <div><b id="stat-total" class="ltr">118</b><span>total</span></div>
+            <div><b id="stat-compounds" class="ltr">40</b><span>compounds</span></div>
           </div>
         </div>
         <div id="ptable" class="ptable" role="grid" aria-label="118 chemical elements"></div>
@@ -91,27 +89,27 @@
       <section id="view-lab" class="view" aria-label="Bonding lab">
         <div class="page-head">
           <div>
-            <div class="eyebrow" data-i18n="eyebrow.lab">Reaction Chamber · Drag · Combine</div>
-            <h1 data-i18n="title.lab">Bonding Laboratory.</h1>
+            <div class="eyebrow">Reaction Chamber · Drag · Combine</div>
+            <h1>Bonding Laboratory.</h1>
           </div>
         </div>
         <div class="lab">
           <div class="lab-panel">
-            <div class="eyebrow" data-i18n="lab.step1">Step 01 · Choose Atoms</div>
-            <h3 data-i18n="lab.picker">Element Picker</h3>
-            <p style="color:var(--ink-2);font-size:12px;margin:6px 0 14px" data-i18n="lab.pickerHint">Click an element to drop it in the reaction zone. Click again to add more of the same.</p>
+            <div class="eyebrow">Step 01 · Choose Atoms</div>
+            <h3>Element Picker</h3>
+            <p style="color:var(--ink-2);font-size:12px;margin:6px 0 14px">Click an element to drop it in the reaction zone. Click again to add more of the same.</p>
             <div id="picker" class="picker" role="list"></div>
           </div>
           <div class="lab-panel">
-            <div class="eyebrow" data-i18n="lab.step2">Step 02 · React</div>
-            <h3 data-i18n="lab.zone">Reaction Zone</h3>
+            <div class="eyebrow">Step 02 · React</div>
+            <h3>Reaction Zone</h3>
             <div id="reaction-zone" class="reaction-zone" aria-live="polite"></div>
             <div class="react-bar">
-              <button class="btn primary" id="btn-react" data-i18n="lab.react">React ⚛</button>
-              <button class="btn" id="btn-clear" data-i18n="lab.clear">Clear</button>
+              <button class="btn primary" id="btn-react">React ⚛</button>
+              <button class="btn" id="btn-clear">Clear</button>
             </div>
             <div id="reaction-result" class="reaction-result">
-              <div class="result-empty" data-i18n="lab.empty">Combine elements to see the result</div>
+              <div class="result-empty">Combine elements to see the result</div>
             </div>
           </div>
         </div>
@@ -122,8 +120,8 @@
         <div class="quiz" id="quiz-root">
           <div class="page-head">
             <div>
-              <div class="eyebrow" data-i18n="eyebrow.quiz">Challenge · 3 Modes · Timer</div>
-              <h1 data-i18n="title.quiz">Quiz Arena.</h1>
+              <div class="eyebrow">Challenge · 3 Modes · Timer</div>
+              <h1>Quiz Arena.</h1>
             </div>
           </div>
           <div class="quiz-menu" id="quiz-menu"></div>
@@ -134,8 +132,8 @@
       <section id="view-cards" class="view" aria-label="Flashcards">
         <div class="page-head">
           <div>
-            <div class="eyebrow" data-i18n="eyebrow.cards">Memory · Spaced Repetition · Offline</div>
-            <h1 data-i18n="title.cards">Flashcards.</h1>
+            <div class="eyebrow">Memory · Spaced Repetition · Offline</div>
+            <h1>Flashcards.</h1>
           </div>
         </div>
         <div id="cards-root" class="cards-root"></div>
@@ -145,19 +143,141 @@
       <section id="view-trends" class="view" aria-label="Trends">
         <div class="page-head">
           <div>
-            <div class="eyebrow" data-i18n="eyebrow.trends">Patterns · Periodic Trends · Charts</div>
-            <h1 data-i18n="title.trends">Trends.</h1>
+            <div class="eyebrow">Patterns · Periodic Trends · Charts</div>
+            <h1>Trends.</h1>
           </div>
         </div>
         <div id="trends-root" class="trends-root"></div>
       </section>
+
+      <!-- PRIVACY POLICY -->
+      <section id="view-privacy" class="view info-view" aria-label="Privacy Policy">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Legal · Last updated 2026-04-26</div>
+            <h1>Privacy Policy.</h1>
+          </div>
+        </div>
+        <article class="info-body">
+          <p>Elementa is an offline-first educational web app. We collect no personal information, use no analytics, and set no advertising cookies. There is no account system.</p>
+
+          <h2>What we store on your device</h2>
+          <p>The app uses your browser's <code>localStorage</code> to keep your experience working between visits. The data never leaves your device.</p>
+          <ul>
+            <li>Theme preference (dark or light)</li>
+            <li>Quiz best scores and daily-streak counter</li>
+            <li>Flashcard study schedule (spaced-repetition state)</li>
+            <li>Last viewed element and last selected trends configuration</li>
+            <li>One-time UI hint flags</li>
+          </ul>
+          <p>You can clear all of this at any time by clearing your browser's site data for this domain.</p>
+
+          <h2>Network requests</h2>
+          <p>To render fonts and 3D libraries, your browser fetches files from these third-party CDNs the first time you load the app:</p>
+          <ul>
+            <li><strong>Google Fonts</strong> — Fraunces, Space Grotesk, JetBrains Mono.</li>
+            <li><strong>unpkg.com</strong> — Three.js (atom &amp; molecule rendering) and Chart.js (trends).</li>
+          </ul>
+          <p>Those CDNs see your IP address and a standard user-agent string as part of any normal HTTP request. They do not receive any personal information from us. After the first load, the service worker caches these files locally and the app works offline.</p>
+
+          <h2>Children</h2>
+          <p>The app is suitable for students of any age. Because we collect no personal data, no parental consent flow is required.</p>
+
+          <h2>Changes</h2>
+          <p>If this policy changes materially we will update the date above. Continued use after a change means you accept the updated policy.</p>
+
+          <h2>Contact</h2>
+          <p>Questions or concerns? Email <a href="mailto:syedurrahman804@gmail.com">syedurrahman804@gmail.com</a>.</p>
+        </article>
+      </section>
+
+      <!-- TERMS & CONDITIONS -->
+      <section id="view-terms" class="view info-view" aria-label="Terms and Conditions">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Legal · Last updated 2026-04-26</div>
+            <h1>Terms &amp; Conditions.</h1>
+          </div>
+        </div>
+        <article class="info-body">
+          <p>By using Elementa you agree to the following terms. If you do not agree, please don't use the app.</p>
+
+          <h2>Educational use</h2>
+          <p>Elementa is provided free of charge as an educational tool. You may use it for personal study, classroom teaching, homework help, or any other non-commercial educational purpose.</p>
+
+          <h2>No warranty</h2>
+          <p>The app is provided "as is" without warranty of any kind. We do not guarantee that it will be available, error-free, or fit for any particular purpose. Use at your own risk.</p>
+
+          <h2>Limitation of liability</h2>
+          <p>To the maximum extent permitted by law, the authors and contributors are not liable for any direct, indirect, incidental, or consequential damages arising from your use of the app, including but not limited to lost study time, missed exam questions, or incorrect answers based on app content.</p>
+
+          <h2>Acceptable use</h2>
+          <p>Don't try to break the app, redistribute it as your own work, or use it in any way that violates applicable law. Reverse-engineering for personal learning is fine; commercial repackaging is not.</p>
+
+          <h2>Third-party content</h2>
+          <p>Element data is derived from the open <a href="https://github.com/Bowserinator/Periodic-Table-JSON" target="_blank" rel="noopener">Periodic-Table-JSON</a> dataset (MIT licensed). 3D rendering uses <a href="https://threejs.org/" target="_blank" rel="noopener">Three.js</a>. Charts use <a href="https://www.chartjs.org/" target="_blank" rel="noopener">Chart.js</a>. Each retains its own license.</p>
+
+          <h2>Changes</h2>
+          <p>We may update these terms occasionally. The "last updated" date above will reflect the most recent change.</p>
+        </article>
+      </section>
+
+      <!-- DISCLAIMER -->
+      <section id="view-disclaimer" class="view info-view" aria-label="Disclaimer">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Legal · Educational accuracy</div>
+            <h1>Disclaimer.</h1>
+          </div>
+        </div>
+        <article class="info-body">
+          <p>Elementa is a learning aid, not an authoritative scientific reference.</p>
+
+          <h2>Scientific accuracy</h2>
+          <p>Numerical values (atomic masses, melting points, electronegativities, etc.) are sourced from public datasets and may contain rounding, transcription, or measurement errors. Different reputable sources sometimes disagree on the same value.</p>
+
+          <h2>Not a textbook substitute</h2>
+          <p>If you are preparing for an exam, writing a paper, or planning a real laboratory experiment, always cross-check values against your textbook, your instructor's notes, NIST, IUPAC, or another authoritative source.</p>
+
+          <h2>Bonding simulator</h2>
+          <p>The bonding lab uses a small curated table of common compounds. It is illustrative, not exhaustive. Real chemistry depends on conditions (temperature, pressure, catalysts) the simulator does not model. Do not use it to predict real-world reactions in a physical lab.</p>
+
+          <h2>3D atomic models</h2>
+          <p>The Bohr-style atom and ball-and-stick molecule visualisations are intentionally simplified. They are teaching aids and do not represent quantum-mechanical reality.</p>
+        </article>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="view-contact" class="view info-view" aria-label="Contact">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Support · Feedback</div>
+            <h1>Contact.</h1>
+          </div>
+        </div>
+        <article class="info-body">
+          <p>Found a bug, an inaccurate value, or a feature you would love to see? We would like to hear from you.</p>
+
+          <h2>Email</h2>
+          <p><a class="contact-link" href="mailto:syedurrahman804@gmail.com">syedurrahman804@gmail.com</a></p>
+
+          <h2>GitHub issues</h2>
+          <p>For bug reports and feature requests it can be easier to file an issue on the project repo: <a href="https://github.com/Synvora/elementa/issues" target="_blank" rel="noopener">github.com/Synvora/elementa/issues</a>.</p>
+
+          <h2>Response time</h2>
+          <p>This is a side project, so replies may take a few days. Thanks for your patience.</p>
+        </article>
+      </section>
     </main>
 
     <footer class="foot">
-      <span>Elementa · Offline-ready Periodic Lab</span>
-      <a class="deer" href="https://deerflow.tech" target="_blank" rel="noopener">
-        <span class="star">✦</span> Created by Deerflow
-      </a>
+      <span class="foot-brand">Elementa · © 2026 Synvora</span>
+      <nav class="foot-links" aria-label="Legal and contact">
+        <a href="#/privacy">Privacy</a>
+        <a href="#/terms">Terms</a>
+        <a href="#/disclaimer">Disclaimer</a>
+        <a href="#/contact">Contact</a>
+      </nav>
     </footer>
   </div>
 

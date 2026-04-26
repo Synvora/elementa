@@ -1,5 +1,5 @@
 // Minimal service worker — cache-first for same-origin assets, network fallback.
-const CACHE = "elementa-v2";
+const CACHE = "elementa-v3";
 const SHELL = [
   "./",
   "index.html",
@@ -12,7 +12,6 @@ const SHELL = [
   "css/quiz.css",
   "css/flashcards.css",
   "css/trends.css",
-  "css/localize.css",
   "css/mobile.css",
   "js/main.js",
   "js/state.js",
@@ -25,19 +24,16 @@ const SHELL = [
   "js/molecule3d.js",
   "js/bonding.js",
   "js/quiz.js",
-  "js/localize.js",
   "js/flashcards.js",
   "js/trends.js",
   "js/gestures.js",
   "data/elements.json",
   "data/compounds.json",
-  "data/translations.json",
   "data/flashcard-decks.json",
   "assets/icons/favicon.svg"
 ];
 const WARM_CDN = [
-  "https://unpkg.com/chart.js@4.4.1/dist/chart.umd.js",
-  "https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap"
+  "https://unpkg.com/chart.js@4.4.1/dist/chart.umd.js"
 ];
 
 self.addEventListener("install", (e) => {

@@ -1,10 +1,9 @@
 {
   "name": "Elementa · Periodic Table Lab",
   "short_name": "Elementa",
-  "version": "2.0.0",
-  "description": "Interactive periodic table with 3D atoms, bonding lab, quizzes, flashcards, trends charts, and an Urdu/RTL mode — offline-ready PWA.",
+  "version": "3.0.0",
+  "description": "Interactive periodic table with 3D atoms, bonding lab, quizzes, flashcards, and trend charts. Offline-ready PWA.",
   "lang": "en",
-  "dir": "auto",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

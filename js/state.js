@@ -1,10 +1,9 @@
 // Tiny persisted state wrapper around localStorage.
-const KEY = "elementa.v2";
-const LEGACY_KEY = "elementa.v1";
+const KEY = "elementa.v3";
+const LEGACY_KEYS = ["elementa.v2", "elementa.v1"];
 
 const defaults = {
   theme: null,              // null = follow system
-  locale: null,             // null = follow navigator.language
   quizBest: {},             // { mode: score }
   streak: { lastPlayed: null, count: 0 },
   lastViewedElement: null,
@@ -17,11 +16,18 @@ function read() {
   try {
     let raw = localStorage.getItem(KEY);
     if (!raw) {
-      // one-time migration from v1
-      const legacy = localStorage.getItem(LEGACY_KEY);
-      if (legacy) {
-        raw = legacy;
-        localStorage.setItem(KEY, legacy);
+      // one-time migration from older versions; strip removed fields (locale).
+      for (const lk of LEGACY_KEYS) {
+        const legacy = localStorage.getItem(lk);
+        if (legacy) {
+          try {
+            const parsed = JSON.parse(legacy);
+            delete parsed.locale;
+            localStorage.setItem(KEY, JSON.stringify(parsed));
+            raw = JSON.stringify(parsed);
+          } catch {}
+          break;
+        }
       }
     }
     return raw ? { ...defaults, ...JSON.parse(raw) } : { ...defaults };

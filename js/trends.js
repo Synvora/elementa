@@ -2,28 +2,34 @@
 // Chart.js loaded once from CDN; service worker caches it for offline.
 import { getElements } from "./data.js";
 import { store } from "./state.js";
-import { t, onLocaleChange } from "./localize.js";
 
 const CHART_JS_URL = "https://unpkg.com/chart.js@4.4.1/dist/chart.umd.js";
 let chartReady = null;
 let activeChart = null;
 
 const METRICS = [
-  { id: "electronegativity",  pick: el => el.electronegativity_pauling ?? el.electronegativity },
-  { id: "atomicRadius",       pick: el => el.atomic_radius ?? el.radius ?? el.atomicRadius },
-  { id: "ionizationEnergy",   pick: el => el.ionization_energies?.[0] ?? el.ionizationEnergy },
-  { id: "meltingPoint",       pick: el => el.melt ?? el.meltingPoint }
+  { id: "electronegativity",  label: "Electronegativity",  pick: el => el.electronegativity_pauling ?? el.electronegativity },
+  { id: "atomicRadius",       label: "Atomic radius",      pick: el => el.atomic_radius ?? el.radius ?? el.atomicRadius },
+  { id: "ionizationEnergy",   label: "Ionization energy",  pick: el => el.ionization_energies?.[0] ?? el.ionizationEnergy },
+  { id: "meltingPoint",       label: "Melting point",      pick: el => el.melt ?? el.meltingPoint }
 ];
+
+const LABELS = {
+  axis: "Axis",
+  period: "Period",
+  group: "Group",
+  metric: "Metric"
+};
+
+function metricLabel(id) {
+  return METRICS.find(m => m.id === id)?.label || id;
+}
 
 export function initTrends() {
   const root = document.getElementById("trends-root");
   if (!root) return;
   const last = store.get("trendsLast") || { axis: "period", value: 2, metric: "electronegativity" };
   render(root, last);
-  onLocaleChange(() => {
-    const cur = store.get("trendsLast") || last;
-    render(root, cur);
-  });
 }
 
 function render(root, cfg) {
@@ -35,20 +41,20 @@ function render(root, cfg) {
   root.innerHTML = `
     <div class="trend-controls">
       <div class="seg">
-        <span class="seg-label">${t("trends.axis")}</span>
-        <button class="seg-btn ${cfg.axis === "period" ? "active" : ""}" data-axis="period">${t("trends.period")}</button>
-        <button class="seg-btn ${cfg.axis === "group" ? "active" : ""}" data-axis="group">${t("trends.group")}</button>
+        <span class="seg-label">${LABELS.axis}</span>
+        <button class="seg-btn ${cfg.axis === "period" ? "active" : ""}" data-axis="period">${LABELS.period}</button>
+        <button class="seg-btn ${cfg.axis === "group" ? "active" : ""}" data-axis="group">${LABELS.group}</button>
       </div>
       <label class="seg">
-        <span class="seg-label">${cfg.axis === "period" ? t("trends.period") : t("trends.group")}</span>
+        <span class="seg-label">${cfg.axis === "period" ? LABELS.period : LABELS.group}</span>
         <select id="trend-value" class="ltr">
           ${axisOptions.map(v => `<option value="${v}" ${v === cfg.value ? "selected" : ""}>${v}</option>`).join("")}
         </select>
       </label>
       <label class="seg">
-        <span class="seg-label">${t("trends.metric")}</span>
+        <span class="seg-label">${LABELS.metric}</span>
         <select id="trend-metric">
-          ${METRICS.map(m => `<option value="${m.id}" ${m.id === cfg.metric ? "selected" : ""}>${t(`trends.metrics.${m.id}`)}</option>`).join("")}
+          ${METRICS.map(m => `<option value="${m.id}" ${m.id === cfg.metric ? "selected" : ""}>${m.label}</option>`).join("")}
         </select>
       </label>
     </div>
@@ -105,7 +111,7 @@ async function drawChart(cfg) {
     data: {
       labels: points.map(p => p.label),
       datasets: [{
-        label: t(`trends.metrics.${cfg.metric}`),
+        label: metricLabel(cfg.metric),
         data: points.map(p => p.y),
         borderColor: getCssVar("--accent") || "#7ef9ff",
         backgroundColor: "rgba(126,249,255,0.15)",

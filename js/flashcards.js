@@ -1,10 +1,15 @@
 // Flashcards with SM-2 spaced repetition. All state in localStorage.
 import { getElements, elementByNumber, CATEGORIES } from "./data.js";
 import { store } from "./state.js";
-import { t, localizedName, onLocaleChange } from "./localize.js";
 
 let decksManifest = null;
 let activeSession = null;  // { deckId, queue:[card], idx, shown, stats: {correct, total} }
+
+const DECK_TITLES = {
+  symbols:    "Symbols → Names",
+  numbers:    "Atomic Numbers",
+  categories: "Categories"
+};
 
 export async function initFlashcards() {
   if (!decksManifest) {
@@ -15,10 +20,6 @@ export async function initFlashcards() {
     }
   }
   renderDeckGrid();
-  onLocaleChange(() => {
-    if (activeSession) renderCard();
-    else renderDeckGrid();
-  });
 }
 
 function defaultDecks() {
@@ -48,18 +49,18 @@ function renderDeckGrid() {
 
   root.innerHTML = `
     <div class="cards-head">
-      <div class="eyebrow" data-i18n="cards.pickDeck">Pick a deck</div>
+      <div class="eyebrow">Pick a deck</div>
     </div>
     <div class="deck-grid">
       ${deckCards.map(({ deck, cards, dueCount, newCount }) => `
         <button class="deck-card" data-deck-id="${deck.id}">
-          <div class="deck-title">${t(`cards.decks.${deck.id}`) || deck.id}</div>
+          <div class="deck-title">${DECK_TITLES[deck.id] || deck.id}</div>
           <div class="deck-stats">
-            <span><b class="ltr">${dueCount}</b> ${t("cards.due")}</span>
-            <span><b class="ltr">${newCount}</b> ${t("cards.new")}</span>
+            <span><b class="ltr">${dueCount}</b> due</span>
+            <span><b class="ltr">${newCount}</b> new</span>
             <span class="muted ltr">${cards.length} total</span>
           </div>
-          <div class="deck-cta" data-i18n="cards.start">Start review</div>
+          <div class="deck-cta">Start review</div>
         </button>
       `).join("")}
     </div>
@@ -77,14 +78,14 @@ function buildDeck(deck) {
       return pool.map(el => ({
         id: `sym:${el.symbol}`,
         front: el.symbol,
-        back: localizedName(el),
+        back: el.name,
         meta: { Z: el.atomicNumber }
       }));
     case "numbers":
       return pool.map(el => ({
         id: `num:${el.atomicNumber}`,
         front: String(el.atomicNumber),
-        back: `${el.symbol} · ${localizedName(el)}`,
+        back: `${el.symbol} · ${el.name}`,
         meta: { Z: el.atomicNumber }
       }));
     case "categories":
@@ -102,7 +103,7 @@ function buildDeck(deck) {
 function categoryLabel(id) {
   const cat = CATEGORIES.find(c => c.id === id);
   if (!cat) return id;
-  return t(cat.i18n) || cat.label;
+  return cat.label;
 }
 
 function startSession(deckId) {
@@ -120,8 +121,8 @@ function startSession(deckId) {
   if (queue.length === 0) {
     const root = document.getElementById("cards-root");
     root.innerHTML = `
-      <div class="card-empty">${t("cards.nothingDue")}</div>
-      <div><button class="btn" id="cards-back" data-i18n="nav.cards">Back</button></div>
+      <div class="card-empty">Nothing due — come back later.</div>
+      <div><button class="btn" id="cards-back">Back</button></div>
     `;
     root.querySelector("#cards-back").addEventListener("click", renderDeckGrid);
     return;
@@ -152,17 +153,17 @@ function renderCard() {
       </div>
       ${shown ? `
         <div class="rate">
-          <div class="rate-label" data-i18n="cards.rate">How well did you know it?</div>
+          <div class="rate-label">How well did you know it?</div>
           <div class="rate-buttons">
-            <button class="btn rate-btn" data-q="0" data-i18n="cards.again">Again</button>
-            <button class="btn rate-btn" data-q="3" data-i18n="cards.hard">Hard</button>
-            <button class="btn rate-btn primary" data-q="4" data-i18n="cards.good">Good</button>
-            <button class="btn rate-btn" data-q="5" data-i18n="cards.easy">Easy</button>
+            <button class="btn rate-btn" data-q="0">Again</button>
+            <button class="btn rate-btn" data-q="3">Hard</button>
+            <button class="btn rate-btn primary" data-q="4">Good</button>
+            <button class="btn rate-btn" data-q="5">Easy</button>
           </div>
         </div>
       ` : `
         <div class="show-row">
-          <button class="btn primary" id="cards-show" data-i18n="cards.show">Show answer</button>
+          <button class="btn primary" id="cards-show">Show answer</button>
         </div>
       `}
     </div>
@@ -195,8 +196,8 @@ function renderSessionEnd() {
   const { stats } = activeSession;
   root.innerHTML = `
     <div class="session-end">
-      <h2 data-i18n="cards.sessionEnd">Session complete</h2>
-      <p>${t("cards.reviewed", { n: stats.done })}</p>
+      <h2>Session complete</h2>
+      <p>You reviewed ${stats.done} card${stats.done === 1 ? "" : "s"}.</p>
       <button class="btn primary" id="cards-back">↺</button>
     </div>
   `;
