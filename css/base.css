@@ -1,0 +1,146 @@
+/* ==========  Design tokens  ========== */
+:root {
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --radius: 6px;
+  --radius-lg: 12px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --trans: .25s var(--ease);
+}
+
+/* Dark theme (default) */
+:root,
+[data-theme="dark"] {
+  --paper: #0a0e1a;
+  --paper-2: #0d1528;
+  --panel: rgba(255, 255, 255, .04);
+  --panel-2: rgba(255, 255, 255, .08);
+  --ink: #eef2ff;
+  --ink-2: rgba(238, 242, 255, .68);
+  --muted: rgba(238, 242, 255, .42);
+  --line: rgba(238, 242, 255, .12);
+  --line-2: rgba(238, 242, 255, .06);
+
+  --accent: #7ef9ff;
+  --accent-2: #ffb454;
+  --accent-3: #ff6b9a;
+
+  /* element category colors */
+  --cat-alkali-metal:    #ff6b9a;
+  --cat-alkaline-earth:  #ffb454;
+  --cat-transition-metal:#ffd166;
+  --cat-post-transition: #9ecaff;
+  --cat-metalloid:       #7ef9ff;
+  --cat-nonmetal:        #6ee7a8;
+  --cat-halogen:         #a78bfa;
+  --cat-noble-gas:       #c792ea;
+  --cat-lanthanide:      #f093b0;
+  --cat-actinide:        #f67280;
+  --cat-unknown:         #94a3b8;
+
+  --shadow-glow: 0 0 32px rgba(126, 249, 255, .18);
+  --scrim: rgba(5, 8, 16, .72);
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --paper: #fbf8f3;
+  --paper-2: #f3ede3;
+  --panel: rgba(10, 14, 26, .04);
+  --panel-2: rgba(10, 14, 26, .08);
+  --ink: #0a0e1a;
+  --ink-2: rgba(10, 14, 26, .68);
+  --muted: rgba(10, 14, 26, .48);
+  --line: rgba(10, 14, 26, .14);
+  --line-2: rgba(10, 14, 26, .06);
+
+  --accent: #0891a1;
+  --accent-2: #c77a1c;
+  --accent-3: #d24d7a;
+
+  --cat-alkali-metal:    #c04770;
+  --cat-alkaline-earth:  #c77a1c;
+  --cat-transition-metal:#a67c15;
+  --cat-post-transition: #3a7ec8;
+  --cat-metalloid:       #0891a1;
+  --cat-nonmetal:        #2b9a66;
+  --cat-halogen:         #7e5bdf;
+  --cat-noble-gas:       #8e53b9;
+  --cat-lanthanide:      #b85878;
+  --cat-actinide:        #c14a56;
+  --cat-unknown:         #5b6779;
+
+  --shadow-glow: 0 0 32px rgba(8, 145, 161, .18);
+  --scrim: rgba(251, 248, 243, .82);
+}
+
+/* ==========  Reset  ========== */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+input { font: inherit; color: inherit; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: 600; letter-spacing: -.01em; }
+
+/* ==========  Background atmosphere  ========== */
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(var(--line-2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-2) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: "";
+  position: fixed; inset: -1px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.04 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: .35;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+[data-theme="dark"] body,
+:root:not([data-theme]) body {
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(126, 249, 255, .06), transparent 60%),
+    radial-gradient(800px 400px at -5% 110%, rgba(255, 180, 84, .05), transparent 60%),
+    var(--paper);
+}
+[data-theme="light"] body {
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(8, 145, 161, .05), transparent 60%),
+    radial-gradient(800px 400px at -5% 110%, rgba(199, 122, 28, .04), transparent 60%),
+    var(--paper);
+}
+
+/* ==========  Utility  ========== */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0);
+  white-space: nowrap; border: 0;
+}
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.serif { font-family: var(--font-display); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}

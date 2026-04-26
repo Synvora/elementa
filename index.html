@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Elementa · Periodic Table Lab</title>
+  <meta name="description" content="A beautiful interactive periodic table with element details, 3D atomic structure, bonding simulator, and quizzes." />
+  <meta name="theme-color" content="#0a0e1a" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/table.css" />
+  <link rel="stylesheet" href="css/detail.css" />
+  <link rel="stylesheet" href="css/bonding.css" />
+  <link rel="stylesheet" href="css/quiz.css" />
+  <link rel="stylesheet" href="css/flashcards.css" />
+  <link rel="stylesheet" href="css/trends.css" />
+  <link rel="stylesheet" href="css/localize.css" />
+  <link rel="stylesheet" href="css/mobile.css" />
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="app">
+
+    <header class="topbar">
+      <a class="brand" href="#/" aria-label="Elementa home">
+        <span class="brand-mark"><span></span></span>
+        Element<em>a</em>
+      </a>
+
+      <div class="topbar-center">
+        <label class="search" aria-label="Search elements">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input id="search-input" type="search" aria-label="Search by name, symbol, or atomic number" data-i18n-placeholder="search.placeholder" placeholder="Search element by name, symbol, or atomic number…" autocomplete="off" />
+          <span class="kbd ltr">/</span>
+        </label>
+      </div>
+
+      <div class="topbar-right">
+        <button class="btn" id="nav-table" aria-label="Periodic table view"><span data-i18n="nav.table">Table</span></button>
+        <button class="btn" id="nav-lab" aria-label="Bonding lab"><span data-i18n="nav.lab">Lab</span></button>
+        <button class="btn" id="nav-quiz" aria-label="Quiz"><span data-i18n="nav.quiz">Quiz</span></button>
+        <button class="btn" id="nav-cards" aria-label="Flashcards"><span data-i18n="nav.cards">Cards</span></button>
+        <button class="btn" id="nav-trends" aria-label="Trends"><span data-i18n="nav.trends">Trends</span></button>
+        <button class="btn locale" id="locale-toggle" aria-label="Change language" title="Change language">اردو</button>
+        <button class="btn icon" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <nav class="chips" id="filter-chips" aria-label="Filter by category"></nav>
+
+    <main>
+      <!-- TABLE VIEW -->
+      <section id="view-table" class="view active" aria-label="Periodic table">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow" data-i18n="eyebrow.table">Observatory · 118 Elements · Interactive</div>
+            <h1 data-i18n="title.table">The Periodic Table.</h1>
+          </div>
+          <div class="stats">
+            <div><b id="stat-visible" class="ltr">118</b><span data-i18n="stats.visible">visible</span></div>
+            <div><b id="stat-total" class="ltr">118</b><span data-i18n="stats.total">total</span></div>
+            <div><b id="stat-compounds" class="ltr">40</b><span data-i18n="stats.compounds">compounds</span></div>
+          </div>
+        </div>
+        <div id="ptable" class="ptable" role="grid" aria-label="118 chemical elements"></div>
+      </section>
+
+      <!-- BONDING LAB VIEW -->
+      <section id="view-lab" class="view" aria-label="Bonding lab">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow" data-i18n="eyebrow.lab">Reaction Chamber · Drag · Combine</div>
+            <h1 data-i18n="title.lab">Bonding Laboratory.</h1>
+          </div>
+        </div>
+        <div class="lab">
+          <div class="lab-panel">
+            <div class="eyebrow" data-i18n="lab.step1">Step 01 · Choose Atoms</div>
+            <h3 data-i18n="lab.picker">Element Picker</h3>
+            <p style="color:var(--ink-2);font-size:12px;margin:6px 0 14px" data-i18n="lab.pickerHint">Click an element to drop it in the reaction zone. Click again to add more of the same.</p>
+            <div id="picker" class="picker" role="list"></div>
+          </div>
+          <div class="lab-panel">
+            <div class="eyebrow" data-i18n="lab.step2">Step 02 · React</div>
+            <h3 data-i18n="lab.zone">Reaction Zone</h3>
+            <div id="reaction-zone" class="reaction-zone" aria-live="polite"></div>
+            <div class="react-bar">
+              <button class="btn primary" id="btn-react" data-i18n="lab.react">React ⚛</button>
+              <button class="btn" id="btn-clear" data-i18n="lab.clear">Clear</button>
+            </div>
+            <div id="reaction-result" class="reaction-result">
+              <div class="result-empty" data-i18n="lab.empty">Combine elements to see the result</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- QUIZ VIEW -->
+      <section id="view-quiz" class="view" aria-label="Quiz">
+        <div class="quiz" id="quiz-root">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow" data-i18n="eyebrow.quiz">Challenge · 3 Modes · Timer</div>
+              <h1 data-i18n="title.quiz">Quiz Arena.</h1>
+            </div>
+          </div>
+          <div class="quiz-menu" id="quiz-menu"></div>
+        </div>
+      </section>
+
+      <!-- FLASHCARDS VIEW -->
+      <section id="view-cards" class="view" aria-label="Flashcards">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow" data-i18n="eyebrow.cards">Memory · Spaced Repetition · Offline</div>
+            <h1 data-i18n="title.cards">Flashcards.</h1>
+          </div>
+        </div>
+        <div id="cards-root" class="cards-root"></div>
+      </section>
+
+      <!-- TRENDS VIEW -->
+      <section id="view-trends" class="view" aria-label="Trends">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow" data-i18n="eyebrow.trends">Patterns · Periodic Trends · Charts</div>
+            <h1 data-i18n="title.trends">Trends.</h1>
+          </div>
+        </div>
+        <div id="trends-root" class="trends-root"></div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span>Elementa · Offline-ready Periodic Lab</span>
+      <a class="deer" href="https://deerflow.tech" target="_blank" rel="noopener">
+        <span class="star">✦</span> Created by Deerflow
+      </a>
+    </footer>
+  </div>
+
+  <!-- DETAIL OVERLAY -->
+  <div id="detail" class="detail" role="dialog" aria-modal="true" aria-labelledby="detail-title" hidden>
+    <div class="detail-card"></div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

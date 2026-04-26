@@ -1,0 +1,73 @@
+/* Mobile polish — loaded last so it overrides earlier breakpoints. */
+
+/* 3D canvases always own their gestures so browsers don't hijack pinch/drag */
+canvas { touch-action: none; }
+
+/* Periodic table scroll behavior — gentle on desktop, hard-scroll on small phones */
+.ptable-scroll {
+  width: 100%;
+  direction: ltr;               /* grid stays LTR even in RTL mode */
+}
+
+@media (max-width: 504px) {
+  .ptable-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+  }
+  .ptable-scroll::-webkit-scrollbar { height: 6px; }
+  .ptable-scroll::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--accent) 40%, transparent);
+    border-radius: 4px;
+  }
+  .ptable {
+    --tile-size: 44px;
+    width: max-content;
+    gap: 3px;
+    padding: 8px 4px 16px;
+  }
+  .ptable .tile { scroll-snap-align: start; min-height: 44px; }
+  .ptable .tile .sym { font-size: 14px; }
+  .ptable .tile .nm { display: none; }
+}
+
+/* Enlarge tap targets on the reaction-zone atoms and picker tiles */
+@media (pointer: coarse) {
+  .rz-atom, .picker-tile { min-width: 44px; min-height: 44px; }
+  .btn { min-height: 40px; }
+}
+
+/* Gesture hint toast */
+.hint-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 16px);
+  background: color-mix(in srgb, var(--panel-2) 94%, transparent);
+  border: 1px solid var(--accent);
+  color: var(--ink);
+  font-size: 13px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--accent) 35%, transparent);
+  opacity: 0;
+  transition: opacity .35s var(--ease), transform .35s var(--ease);
+  z-index: 9999;
+  max-width: calc(100vw - 32px);
+  text-align: center;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+}
+.hint-toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Give both 3D stages a consistent responsive height via CSS var */
+.atom-stage, #molecule-stage {
+  height: var(--stage-h, min(48vh, 360px));
+  min-height: 220px;
+}

@@ -1,0 +1,5 @@
+[
+  { "id": "symbols",    "generator": "symbols" },
+  { "id": "numbers",    "generator": "numbers" },
+  { "id": "categories", "generator": "categories", "filter": { "upToZ": 36 } }
+]

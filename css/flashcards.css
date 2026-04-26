@@ -1,0 +1,147 @@
+.cards-root { display: flex; flex-direction: column; gap: 20px; }
+
+.deck-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+.deck-card {
+  text-align: inherit;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  transition: all var(--trans);
+  color: var(--ink);
+}
+.deck-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.deck-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+}
+.deck-stats {
+  display: flex;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  flex-wrap: wrap;
+}
+.deck-stats b { color: var(--ink); font-family: var(--font-display); font-size: 16px; margin-inline-end: 4px; }
+.deck-stats .muted { color: var(--muted); }
+.deck-cta {
+  margin-top: auto;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  font-size: 11px;
+  color: var(--accent);
+}
+
+.card-stage {
+  max-width: 620px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: stretch;
+}
+.card-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+.card-progress .bar {
+  flex: 1; height: 6px;
+  background: var(--panel);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.card-progress .bar .fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width .3s var(--ease);
+}
+
+.flashcard {
+  position: relative;
+  min-height: 220px;
+  border-radius: var(--radius-lg);
+  perspective: 1200px;
+  cursor: pointer;
+}
+.flashcard .face {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  padding: 28px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  backface-visibility: hidden;
+  transition: transform .55s var(--ease);
+}
+.flashcard .face.back {
+  transform: rotateY(180deg);
+  background: var(--panel-2);
+  border-color: var(--accent);
+}
+.flashcard.flipped .face.front { transform: rotateY(-180deg); }
+.flashcard.flipped .face.back  { transform: rotateY(0deg); }
+.card-content {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 700;
+  text-align: center;
+  color: var(--ink);
+}
+
+.show-row, .rate { text-align: center; }
+.rate-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  margin-bottom: 10px;
+}
+.rate-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card-empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--ink-2);
+  background: var(--panel);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-lg);
+}
+.session-end {
+  text-align: center;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+.session-end h2 { font-family: var(--font-display); font-size: 28px; }
+
+@media (max-width: 680px) {
+  .card-stage { gap: 14px; }
+  .flashcard { min-height: 180px; }
+  .rate-buttons .btn { padding: 9px 12px; font-size: 11px; }
+}

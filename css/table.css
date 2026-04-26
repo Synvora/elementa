@@ -1,0 +1,172 @@
+/* ==========  Periodic table grid  ========== */
+.ptable {
+  --tile-size: 62px;
+  display: grid;
+  grid-template-columns: repeat(18, var(--tile-size));
+  grid-auto-rows: var(--tile-size);
+  gap: 4px;
+  justify-content: center;
+  padding: 12px 0 24px;
+  position: relative;
+}
+
+.lanth-actin-label {
+  grid-column: 1 / span 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  padding-right: 8px;
+  border-right: 1px dashed var(--line);
+}
+
+/* Spacer row to create a visual gap between row 7 and the lanth/actin strip */
+.ptable-gap {
+  grid-column: 1 / -1;
+  height: 16px;
+  pointer-events: none;
+}
+
+/* ==========  Element tile  ========== */
+.tile {
+  --cat-color: var(--cat-unknown);
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 4px 6px;
+  background: color-mix(in srgb, var(--cat-color) 8%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--cat-color) 28%, var(--line));
+  border-radius: var(--radius);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform var(--trans), border-color var(--trans), background var(--trans), opacity var(--trans), box-shadow var(--trans);
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(4px);
+  animation: tile-in .45s var(--ease) forwards;
+  animation-delay: calc(var(--i, 0) * 6ms);
+  will-change: transform;
+}
+.tile::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cat-color) 16%, transparent), transparent 65%);
+  pointer-events: none;
+}
+
+@keyframes tile-in {
+  to { opacity: 1; transform: none; }
+}
+
+.tile:hover {
+  transform: translateY(-3px);
+  border-color: var(--cat-color);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--cat-color) 35%, transparent);
+  z-index: 3;
+}
+.tile:focus-visible {
+  outline: none;
+  border-color: var(--cat-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cat-color) 35%, transparent);
+}
+
+.tile .z {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-2);
+  line-height: 1;
+}
+.tile .m {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--muted);
+  line-height: 1;
+  text-align: right;
+  grid-row: 1;
+  grid-column: 2;
+}
+.tile > .z { grid-row: 1; grid-column: 1; display: flex; justify-content: space-between; gap: 4px; width: 100%; }
+.tile > .z span:last-child { color: var(--muted); font-size: 8px; }
+
+.tile .sym {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--cat-color);
+  text-align: center;
+  align-self: center;
+  justify-self: center;
+}
+.tile .nm {
+  font-size: 8.5px;
+  color: var(--ink-2);
+  text-align: center;
+  line-height: 1;
+  padding-bottom: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Filtered / search-dimmed state */
+.tile.dim {
+  opacity: .15;
+  pointer-events: none;
+}
+.tile.highlighted {
+  box-shadow: 0 0 0 2px var(--cat-color), 0 0 24px color-mix(in srgb, var(--cat-color) 40%, transparent);
+  z-index: 4;
+}
+
+/* Responsive tile sizing (narrowest breakpoint handled in mobile.css via horizontal scroll) */
+@media (max-width: 1200px) { .ptable { --tile-size: 52px; } .tile .sym { font-size: 18px; } }
+@media (max-width: 900px)  { .ptable { --tile-size: 44px; gap: 3px; } .tile .sym { font-size: 15px; } .tile .nm { display: none; } }
+@media (max-width: 680px)  { .ptable { --tile-size: 40px; gap: 3px; } .tile .sym { font-size: 14px; } .tile .z { font-size: 7px; } .tile > .z span:last-child { display: none; } }
+
+/* Page header block above the table */
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 8px 0 4px;
+}
+.page-head h1 {
+  font-size: clamp(24px, 3.6vw, 42px);
+  letter-spacing: -.02em;
+  line-height: 1;
+}
+.page-head h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+.page-head .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .22em;
+  margin-bottom: 6px;
+}
+.page-head .stats {
+  display: flex;
+  gap: 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.page-head .stats b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+}
